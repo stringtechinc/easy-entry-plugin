@@ -1,0 +1,53 @@
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'register_page' %}
+
+{% block main %}
+<h1 class="page-heading">注册</h1>
+<div id="top_wrap" class="container-fluid">
+    <div id="top_box" class="row">
+        <div id="top_box__body" class="col-md-10 col-md-offset-1">
+            <form method="post" action="{{ url('entry') }}" class="h-adr">
+                {{ form_widget(form._token) }}
+                <div id="top_box__body_inner" class="dl_table">
+                    <dl id="top_box__email">
+                        <dt>{{ form_label(form.email) }}</dt>
+                        <dd>
+                            {% if error %}
+                                <div class="form-group has-error">
+                            {% else %}
+                                <div class="form-group">
+                            {% endif %}
+                                {{ form_widget(form.email) }}
+                                {{ form_errors(form.email) }}
+                                {% if error %}
+                                <p class="errormsg text-danger">邮箱已注册</p>
+                                {% endif %}
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                {% for f in form %}
+                    {% if f.vars.name matches '[^plg*]' %}
+                        <div class="extra-form dl_table">
+                            {{ form_row(f) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <p id="top_box__agreement" class="form_terms_link">当您完成注册后，即表示您已充分阅读、理解并接受<a href="{{ url('help_agreement') }}" target="_blank">注册协议</a>及<a href="{{ url('help_privacy') }}" target="_blank">隐私条款</a>
+                </p>
+
+                <div id="top_box__footer" class="row no-padding">
+                    <div id="top_box__button_menu" class="btn_group col-sm-offset-4 col-sm-4">
+                        <p>
+                            <button type="submit" class="btn btn-primary btn-block">发送注册邮件</button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</div>
+{% endblock %}

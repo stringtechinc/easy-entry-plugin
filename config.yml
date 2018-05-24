@@ -1,0 +1,8 @@
+name: EasyEntry
+code: EasyEntry
+version: 1.0.0
+service:
+    - EasyEntryServiceProvider
+orm.path:
+    - /Resource/doctrine
+event: EasyEntryEvent

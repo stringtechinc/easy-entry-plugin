@@ -1,0 +1,73 @@
+{#
+/*
+ * This file is part of EasyEntry(zh)
+ */
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'mypage' %}
+
+{% set mypageno = 'change' %}
+
+{% block main %}
+<h1 class="page-heading">账号设置</h1>
+<div id="detail_wrap" class="container-fluid">
+    {% include 'Mypage/navi.twig' %}
+    <div id="detail_box" class="row">
+        <div id="detail_box__body" class="col-md-10 col-md-offset-1">
+            <form method="post" action="{{ url('mypage_change') }}" class="h-adr">
+                {{ form_widget(form._token) }}
+                <div id="detail_box__body_inner" class="dl_table">
+                    <dl id="detail_box__name">
+                        <dt>{{ form_label(form.name) }}</dt>
+                        <dd class="form-group input_name">
+                            {{ form_widget(form.name.name01) }}
+                            {{ form_widget(form.name.name02) }}
+                            {{ form_errors(form.name.name01) }}
+                            {{ form_errors(form.name.name02) }}
+                        </dd>
+                    </dl>
+                    <dl id="detail_box__email">
+                        <dt>{{ form_label(form.email) }}</dt>
+                        <dd class="form-group {% if dup%} has-error {% endif %}">
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                            {% if dup %}<p class="errormsg text-danger">邮箱已使用</p>{% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div style="text-align:right;font-size:12px;padding-top:10px;">
+                    <a href="{{ url('mypage_withdraw') }}" style="color:gray;">账号注销</a>
+                </div>
+
+                {% for error in app.session.flashbag.get('eccube.front.request.error')  %}
+                <div id="cart_box__message--{{ loop.index }}" class="message">
+                    <p class="errormsg bg-danger">
+                        <svg class="cb cb-warning"><use xlink:href="#cb-warning" /></svg>
+                        {{ error }}
+                    </p>
+                </div>
+                {% endfor %}
+
+                {% for f in form %}
+                    {% if f.vars.name matches '[^plg*]' %}
+                        <div class="extra-form dl_table">
+                            {{ form_row(f) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div id="detail_box__edit_button" class="row no-padding">
+                    <div class="btn_group col-sm-offset-4 col-sm-4">
+                        <p>
+                            <button type="submit" class="btn btn-info btn-block">保存信息</button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+</div>
+{% endblock %}

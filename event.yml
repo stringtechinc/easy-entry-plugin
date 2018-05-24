@@ -1,0 +1,2 @@
+admin.customer.edit.index.initialize:
+    - [onAdminCustomerEditIndexInitialize, NORMAL]
