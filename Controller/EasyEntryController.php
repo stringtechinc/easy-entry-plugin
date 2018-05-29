@@ -139,6 +139,58 @@ class EasyEntryController
     }
 
     /**
+     * Buy Step
+     *
+     * @param Application $app
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function buystep(Application $app, Request $request)
+    {
+        // check user status
+        if (!$app->isGranted('ROLE_USER')) {
+            return $app->redirect($app->url('entry'));
+        }
+
+        // check email address
+        $Customer = $app['user'];
+        if (strstr($Customer->getEmail(), '@wechat.com')) {
+            $app->addRequestError('邮箱未设置');
+            return $app->redirect($app->url('mypage_change'));
+        }
+
+        // check delivery address
+        $addressCurrNum = count($Customer->getCustomerAddresses());
+        if (0 == $addressCurrNum) {
+            $app->addRequestError('配送地址未设置');
+            return $app->redirect($app->url('mypage_delivery'));
+        }
+
+        // FRONT_CART_BUYSTEP_INITIALIZE
+        $event = new EventArgs(
+            array(),
+            $request
+        );
+        $app['eccube.event.dispatcher']->dispatch(EccubeEvents::FRONT_CART_BUYSTEP_INITIALIZE, $event);
+
+        $app['eccube.service.cart']->lock();
+        $app['eccube.service.cart']->save();
+
+        // FRONT_CART_BUYSTEP_COMPLETE
+        $event = new EventArgs(
+            array(),
+            $request
+        );
+        $app['eccube.event.dispatcher']->dispatch(EccubeEvents::FRONT_CART_BUYSTEP_COMPLETE, $event);
+
+        if ($event->hasResponse()) {
+            return $event->getResponse();
+        }
+        return $app->redirect($app->url('shopping'));
+    }
+
+
+    /**
      *
      * 0: create 1: resend 2: error
      */

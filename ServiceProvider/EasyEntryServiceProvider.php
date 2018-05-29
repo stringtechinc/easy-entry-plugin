@@ -32,6 +32,9 @@ class EasyEntryServiceProvider implements ServiceProviderInterface
         $app->match('/entry', 'Plugin\EasyEntry\Controller\EasyEntryController::register')->bind('entry');
         $app->match('/mypage/change', 'Plugin\EasyEntry\Controller\EasyEntryController::profile')->bind('mypage_change');
 
+        // Buy Step
+        $app->match('/cart/buystep', 'Plugin\EasyEntry\Controller\EasyEntryController::buystep')->bind('cart_buystep');
+
         // Form
         $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
             $types[] = new EasyEntryProfileType();
